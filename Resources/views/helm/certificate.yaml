@@ -1,0 +1,21 @@
+{{ if false }}
+apiVersion: cert-manager.io/v1alpha2
+kind: Certificate
+metadata:
+    name: {{ .Release.Name }}-cert
+    labels:
+        app.kubernetes.io/name: {{ .Release.Name }}
+        app.kubernetes.io/part-of: {{ .Release.Name }}
+        helm.sh/chart: {{ include "chart" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+        app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  secretName: {{ template "fullname" . }}
+  duration: 24h
+  renewBefore: 12h
+  dnsNames:
+    - {{ $.Values.ingress.hostname }}.{{ $.Values.ingress.path }}
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+{{ end }}
